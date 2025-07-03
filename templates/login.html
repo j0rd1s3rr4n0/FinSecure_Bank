@@ -1,0 +1,10 @@
+<!doctype html>
+<title>Login</title>
+<h1>Login</h1>
+{% if error %}<p style="color:red">{{ error }}</p>{% endif %}
+<form method="post">
+    <input name="username" placeholder="username" required>
+    <input name="password" type="password" placeholder="password" required>
+    <button type="submit">Login</button>
+</form>
+<a href="{{ url_for('register') }}">Register</a>

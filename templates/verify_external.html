@@ -1,0 +1,12 @@
+<!doctype html>
+<title>Verify External</title>
+<h1>Verify External URL</h1>
+<form method="post">
+    <input name="url" placeholder="http://example.com" required value="{{ url or '' }}">
+    <button type="submit">Fetch</button>
+</form>
+{% if content %}
+<h2>Result:</h2>
+<pre>{{ content }}</pre>
+{% endif %}
+<p><a href="{{ url_for('dashboard') }}">Back</a></p>
