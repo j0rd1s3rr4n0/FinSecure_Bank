@@ -6,7 +6,8 @@ Este proyecto muestra una vulnerabilidad de Server Side Request Forgery (SSRF) u
 - Registro mediante DNI (se valida la letra con el algoritmo oficial).
 - El registro también solicita nombre completo y permite subir un PDF mayor que 0 bytes.
 - Para iniciar sesión se utilizan DNI y contraseña.
-- Durante la inicialización se crean un millón de usuarios con fondos aleatorios.
+- Durante la inicialización se crean 250000 usuarios con fondos aleatorios.
+- En el dashboard solo se muestran las últimas 300 transferencias para mejorar el rendimiento.
 - La interfaz web utiliza Bootstrap para simular la apariencia de un banco real.
 
 ## Requisitos

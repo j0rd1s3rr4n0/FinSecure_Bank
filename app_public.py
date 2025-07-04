@@ -102,7 +102,7 @@ def dashboard():
     db = get_db()
     transfers = db.execute(
         'SELECT from_user, to_user, amount, created FROM transfers '
-        'WHERE from_user=? OR to_user=? ORDER BY id DESC',
+        'WHERE from_user=? OR to_user=? ORDER BY id DESC LIMIT 300',
         (user['dni'], user['dni'])
     ).fetchall()
     return render_template('dashboard.html', user=user, transfers=transfers)
