@@ -13,6 +13,7 @@ Este proyecto muestra una vulnerabilidad de Server Side Request Forgery (SSRF) u
 - La interfaz web utiliza TailwindCSS vía CDN con un estilo inspirado en apps fintech modernas.
 - La página de inicio presenta publicidad y ventajas si no has iniciado sesión.
 - Se añadió una cabecera con imagen destacada y un pie de página con iconos de contacto.
+- La portada ahora usa ilustraciones SVG locales y secciones promocionales con testimonios.
 - Los saldos se muestran formateados con miles separados por `.` y decimales con `,`.
 
 ## Requisitos
