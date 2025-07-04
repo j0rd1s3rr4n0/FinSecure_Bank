@@ -10,6 +10,14 @@ CREATE TABLE IF NOT EXISTS users (
     password TEXT NOT NULL,
     balance REAL DEFAULT 0
 );
+
+CREATE TABLE IF NOT EXISTS transfers (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    from_user TEXT,
+    to_user TEXT NOT NULL,
+    amount REAL NOT NULL,
+    created TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
 '''
 
 users = [

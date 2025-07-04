@@ -2,5 +2,19 @@
 <title>Dashboard</title>
 <h1>Hello {{ user['username'] }}</h1>
 <p>Your balance: {{ user['balance'] }}</p>
+<h2>Transfers</h2>
+<table border="1">
+    <tr><th>From</th><th>To</th><th>Amount</th><th>Date</th></tr>
+    {% for t in transfers %}
+    <tr>
+        <td>{{ t['from_user'] or 'system' }}</td>
+        <td>{{ t['to_user'] }}</td>
+        <td>{{ t['amount'] }}</td>
+        <td>{{ t['created'] }}</td>
+    </tr>
+    {% else %}
+    <tr><td colspan="4">No transfers</td></tr>
+    {% endfor %}
+</table>
 <p><a href="{{ url_for('verify_external') }}">Verify external URL</a></p>
 <p><a href="{{ url_for('logout') }}">Logout</a></p>

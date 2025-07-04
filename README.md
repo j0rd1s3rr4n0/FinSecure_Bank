@@ -26,9 +26,12 @@ Este proyecto muestra una vulnerabilidad de Server Side Request Forgery (SSRF) u
 ## Endpoints de la aplicación
 
 - **app_public.py** (puerto 5000)
-  - `/register`, `/login` y `/dashboard`: flujo básico de registro e inicio de sesión.
+  - `/register`, `/login` y `/dashboard`: flujo básico de registro e inicio de sesión. En el *dashboard* también se muestran las transferencias entrantes y salientes.
   - `/verify_external`: recibe una URL y la obtiene directamente con `requests.get`. Aquí es donde se aprovecha la SSRF.
 - **app_internal.py** (puerto 5001, solo escuchando en `127.0.0.1`)
+  - `/internal/users`: lista todos los usuarios registrados.
+  - `/internal/balances`: muestra el balance de cada usuario.
+  - `/internal/transfer` (POST JSON): permite transferir dinero de un usuario a otro.
   - `/internal/transfer_all?to_user=<usuario>`: transfiere todo el dinero de todos los usuarios al indicado en `to_user` sin autenticación.
     Este endpoint se diseñó para estar expuesto únicamente internamente, por lo que el puerto 5001 no debería ser accesible desde Internet.
 
