@@ -1,12 +1,18 @@
-<!doctype html>
-<title>Verify External</title>
-<h1>Verify External URL</h1>
-<form method="post">
-    <input name="url" placeholder="http://example.com" required value="{{ url or '' }}">
-    <button type="submit">Fetch</button>
-</form>
-{% if content %}
-<h2>Result:</h2>
-<pre>{{ content }}</pre>
-{% endif %}
-<p><a href="{{ url_for('dashboard') }}">Back</a></p>
+{% extends 'base.html' %}
+{% block title %}Verify URL - FinSecure Bank{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-8">
+    <h2 class="mb-4">Verificar URL externa</h2>
+    <form method="post" class="input-group mb-3">
+      <input class="form-control" name="url" placeholder="http://example.com" required value="{{ url or '' }}">
+      <button class="btn btn-secondary" type="submit">Fetch</button>
+    </form>
+    {% if content %}
+    <h3>Resultado</h3>
+    <pre class="bg-light p-3 border">{{ content }}</pre>
+    {% endif %}
+    <a class="btn btn-link" href="{{ url_for('dashboard') }}">Volver</a>
+  </div>
+</div>
+{% endblock %}

@@ -1,4 +1,10 @@
-<!doctype html>
-<title>Welcome</title>
-<h1>Welcome to the Bank Demo</h1>
-<p><a href="{{ url_for('login') }}">Login</a> | <a href="{{ url_for('register') }}">Register</a></p>
+{% extends 'base.html' %}
+{% block title %}Welcome - FinSecure Bank{% endblock %}
+{% block content %}
+<div class="py-5 text-center">
+  <h1 class="display-4">Welcome to FinSecure Bank</h1>
+  <p class="lead">Your trusted partner in online banking.</p>
+  <a class="btn btn-primary btn-lg" href="{{ url_for('login') }}">Login</a>
+  <a class="btn btn-secondary btn-lg" href="{{ url_for('register') }}">Register</a>
+</div>
+{% endblock %}

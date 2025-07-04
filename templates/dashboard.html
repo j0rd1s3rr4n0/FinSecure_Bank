@@ -1,21 +1,42 @@
-<!doctype html>
-<title>Dashboard</title>
-<h1>Hello {{ user['full_name'] }}</h1>
-<p>DNI: {{ user['dni'] }}</p>
-<p>Your balance: {{ user['balance'] }}</p>
-<h2>Transfers</h2>
-<table border="1">
-    <tr><th>From</th><th>To</th><th>Amount</th><th>Date</th></tr>
-    {% for t in transfers %}
+{% extends 'base.html' %}
+{% block title %}Dashboard - FinSecure Bank{% endblock %}
+{% block content %}
+<h2 class="mb-4">Bienvenido {{ user['full_name'] }}</h2>
+<div class="row mb-4">
+  <div class="col-md-6">
+    <div class="card text-white bg-success mb-3">
+      <div class="card-header">Saldo actual</div>
+      <div class="card-body">
+        <h3 class="card-title">{{ '%.2f'|format(user['balance']) }} €</h3>
+        <p class="card-text">DNI: {{ user['dni'] }}</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6 d-flex align-items-stretch">
+    <div class="card w-100">
+      <div class="card-header">Acciones</div>
+      <div class="card-body">
+        <a class="btn btn-outline-primary" href="{{ url_for('verify_external') }}">Verificar URL Externa</a>
+      </div>
+    </div>
+  </div>
+</div>
+<h3>Historial de transferencias</h3>
+<table class="table table-striped">
+  <thead>
+    <tr><th>De</th><th>A</th><th>Monto</th><th>Fecha</th></tr>
+  </thead>
+  <tbody>
+  {% for t in transfers %}
     <tr>
-        <td>{{ t['from_user'] or 'system' }}</td>
-        <td>{{ t['to_user'] }}</td>
-        <td>{{ t['amount'] }}</td>
-        <td>{{ t['created'] }}</td>
+      <td>{{ t['from_user'] or 'system' }}</td>
+      <td>{{ t['to_user'] }}</td>
+      <td>{{ '%.2f'|format(t['amount']) }} €</td>
+      <td>{{ t['created'] }}</td>
     </tr>
-    {% else %}
-    <tr><td colspan="4">No transfers</td></tr>
-    {% endfor %}
+  {% else %}
+    <tr><td colspan="4" class="text-center">Sin transferencias</td></tr>
+  {% endfor %}
+  </tbody>
 </table>
-<p><a href="{{ url_for('verify_external') }}">Verify external URL</a></p>
-<p><a href="{{ url_for('logout') }}">Logout</a></p>
+{% endblock %}

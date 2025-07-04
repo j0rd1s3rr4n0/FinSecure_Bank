@@ -7,6 +7,7 @@ Este proyecto muestra una vulnerabilidad de Server Side Request Forgery (SSRF) u
 - El registro también solicita nombre completo y permite subir un PDF mayor que 0 bytes.
 - Para iniciar sesión se utilizan DNI y contraseña.
 - Durante la inicialización se crean un millón de usuarios con fondos aleatorios.
+- La interfaz web utiliza Bootstrap para simular la apariencia de un banco real.
 
 ## Requisitos
 - Python 3
