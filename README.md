@@ -12,6 +12,7 @@ Este proyecto muestra una vulnerabilidad de Server Side Request Forgery (SSRF) u
 - El dashboard permite realizar transferencias indicando IBAN de destino y monto.
 - La interfaz web utiliza TailwindCSS vía CDN con un estilo inspirado en apps fintech modernas.
 - La página de inicio presenta publicidad y ventajas si no has iniciado sesión.
+- Se añadió una cabecera con imagen destacada y un pie de página con iconos de contacto.
 - Los saldos se muestran formateados con miles separados por `.` y decimales con `,`.
 
 ## Requisitos
