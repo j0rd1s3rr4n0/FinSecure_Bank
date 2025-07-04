@@ -140,9 +140,10 @@ def make_transfer():
         float(amount)
     except ValueError:
         return redirect(url_for('dashboard', error='Monto inválido'))
+    internal_url = 'http://127.0.0.1:5001/transfer'
     try:
         resp = requests.get(
-            'http://127.0.0.1:5001/transfer',
+            internal_url,
             params={'from': user['iban'], 'to': to_iban, 'amount': amount},
             timeout=5,
         )
@@ -150,7 +151,9 @@ def make_transfer():
             return redirect(url_for('dashboard', error='Error en la transferencia'))
     except Exception:
         return redirect(url_for('dashboard', error='Error en la transferencia'))
-    return redirect(url_for('dashboard', msg='Transferencia realizada'))
+
+    msg = f'Transferencia realizada mediante {internal_url}'
+    return redirect(url_for('dashboard', msg=msg))
 
 @app.route('/verify_external', methods=['GET', 'POST'])
 def verify_external():

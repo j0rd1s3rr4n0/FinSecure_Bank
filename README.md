@@ -42,6 +42,8 @@ Este proyecto muestra una vulnerabilidad de Server Side Request Forgery (SSRF) u
 - **app_public.py** (puerto 5000)
 - `/register`, `/login` y `/dashboard`: registro mediante DNI y documento PDF, inicio de sesión con DNI y contraseña. En el *dashboard* se muestran las transferencias.
   Además cuenta con un formulario para transferir fondos introduciendo un IBAN y un monto.
+  Al enviarlo, el servidor hace una petición interna a `http://127.0.0.1:5001/transfer` y muestra
+  un mensaje indicando la URL utilizada.
   - `/verify_external`: recibe una URL y la obtiene directamente con `requests.get`. Aquí es donde se aprovecha la SSRF.
 - **app_internal.py** (puerto 5001, solo escuchando en `127.0.0.1`)
   - `/users`: lista todos los usuarios registrados con su IBAN.
