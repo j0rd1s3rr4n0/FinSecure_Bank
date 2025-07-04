@@ -2,6 +2,12 @@
 
 Este proyecto muestra una vulnerabilidad de Server Side Request Forgery (SSRF) usando Flask.
 
+## Características recientes
+- Registro mediante DNI (se valida la letra con el algoritmo oficial).
+- El registro también solicita nombre completo y permite subir un PDF mayor que 0 bytes.
+- Para iniciar sesión se utilizan DNI y contraseña.
+- Durante la inicialización se crean un millón de usuarios con fondos aleatorios.
+
 ## Requisitos
 - Python 3
 - Dependencias: `pip install -r requirements.txt`
@@ -13,9 +19,11 @@ Este proyecto muestra una vulnerabilidad de Server Side Request Forgery (SSRF) u
    
    También puedes ejecutarlos por separado con `python app_internal.py` y `python app_public.py`.
 2. Abre `http://localhost:5000` en tu navegador y registra o inicia sesión con un usuario.
+   El formulario de registro solicita DNI (con la letra correcta), nombre completo,
+   contraseña y un documento PDF.
 
 ## Realizar el ataque SSRF
-1. Registra un usuario atacante, por ejemplo `atacante`.
+1. Registra un usuario atacante con un DNI válido, por ejemplo `12345678Z`.
 2. Desde el panel, ve a **Verify external URL**.
 3. Introduce la URL interna para transferir fondos desde otra cuenta:
    ```
@@ -26,7 +34,7 @@ Este proyecto muestra una vulnerabilidad de Server Side Request Forgery (SSRF) u
 ## Endpoints de la aplicación
 
 - **app_public.py** (puerto 5000)
-  - `/register`, `/login` y `/dashboard`: flujo básico de registro e inicio de sesión. En el *dashboard* también se muestran las transferencias entrantes y salientes.
+ - `/register`, `/login` y `/dashboard`: registro mediante DNI y documento PDF, inicio de sesión con DNI y contraseña. En el *dashboard* se muestran las transferencias.
   - `/verify_external`: recibe una URL y la obtiene directamente con `requests.get`. Aquí es donde se aprovecha la SSRF.
 - **app_internal.py** (puerto 5001, solo escuchando en `127.0.0.1`)
   - `/users`: lista todos los usuarios registrados.

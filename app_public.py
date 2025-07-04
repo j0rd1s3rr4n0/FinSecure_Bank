@@ -1,10 +1,14 @@
 from flask import Flask, request, redirect, render_template, session, url_for, g
 import sqlite3
+import os
 import requests
+from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
 app.secret_key = 'secret-key'  # Insecure for demo
 DB_NAME = 'bank.db'
+UPLOAD_FOLDER = 'docs'
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 # ---- Database helpers ----
 
@@ -13,6 +17,14 @@ def get_db():
         g.db = sqlite3.connect(DB_NAME)
         g.db.row_factory = sqlite3.Row
     return g.db
+
+def valid_dni(dni: str) -> bool:
+    """Check Spanish DNI control letter."""
+    letters = "TRWAGMYFPDXBNJZSQVHLCKE"
+    if len(dni) != 9 or not dni[:-1].isdigit() or not dni[-1].isalpha():
+        return False
+    num = int(dni[:-1])
+    return dni[-1].upper() == letters[num % 23]
 
 @app.teardown_appcontext
 def close_db(exception=None):
@@ -36,26 +48,41 @@ def index():
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
-        username = request.form['username']
+        dni = request.form['dni'].upper()
+        fullname = request.form['fullname']
         password = request.form['password']
+        doc = request.files.get('document')
+        if not valid_dni(dni):
+            return render_template('register.html', error='DNI inválido')
+        if not doc or not doc.filename.lower().endswith('.pdf'):
+            return render_template('register.html', error='Debes subir un PDF')
+        data = doc.read()
+        if len(data) == 0:
+            return render_template('register.html', error='El PDF no puede estar vacío')
+        filename = secure_filename(dni + '_' + doc.filename)
+        filepath = os.path.join(UPLOAD_FOLDER, filename)
+        with open(filepath, 'wb') as f:
+            f.write(data)
         db = get_db()
         try:
-            db.execute('INSERT INTO users (username, password, balance) VALUES (?, ?, 0)',
-                       (username, password))
+            db.execute(
+                'INSERT INTO users (dni, full_name, password, doc_path, balance) '
+                'VALUES (?, ?, ?, ?, 0)',
+                (dni, fullname, password, filepath))
             db.commit()
             return redirect(url_for('login'))
         except sqlite3.IntegrityError:
-            return render_template('register.html', error='Username exists')
+            return render_template('register.html', error='DNI ya registrado')
     return render_template('register.html')
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        username = request.form['username']
+        dni = request.form['dni'].upper()
         password = request.form['password']
         db = get_db()
-        user = db.execute('SELECT * FROM users WHERE username=? AND password=?',
-                          (username, password)).fetchone()
+        user = db.execute('SELECT * FROM users WHERE dni=? AND password=?',
+                          (dni, password)).fetchone()
         if user:
             session['user_id'] = user['id']
             return redirect(url_for('dashboard'))
@@ -76,7 +103,7 @@ def dashboard():
     transfers = db.execute(
         'SELECT from_user, to_user, amount, created FROM transfers '
         'WHERE from_user=? OR to_user=? ORDER BY id DESC',
-        (user['username'], user['username'])
+        (user['dni'], user['dni'])
     ).fetchall()
     return render_template('dashboard.html', user=user, transfers=transfers)
 

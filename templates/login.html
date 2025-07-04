@@ -3,8 +3,8 @@
 <h1>Login</h1>
 {% if error %}<p style="color:red">{{ error }}</p>{% endif %}
 <form method="post">
-    <input name="username" placeholder="username" required>
-    <input name="password" type="password" placeholder="password" required>
+    <input name="dni" placeholder="DNI" required>
+    <input name="password" type="password" placeholder="Contraseña" required>
     <button type="submit">Login</button>
 </form>
 <a href="{{ url_for('register') }}">Register</a>

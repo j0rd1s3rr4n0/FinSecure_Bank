@@ -13,10 +13,10 @@ def get_db():
 
 @app.route('/users')
 def list_users():
-    """Return list of all usernames."""
+    """Return list of all user DNIs."""
     conn = get_db()
-    c = conn.execute('SELECT username FROM users')
-    data = [r['username'] for r in c.fetchall()]
+    c = conn.execute('SELECT dni FROM users')
+    data = [r['dni'] for r in c.fetchall()]
     conn.close()
     return jsonify({'users': data})
 
@@ -25,8 +25,8 @@ def list_users():
 def get_founds():
     """Return balances for all users."""
     conn = get_db()
-    c = conn.execute('SELECT username, balance FROM users')
-    data = [{'username': r['username'], 'balance': r['balance']} for r in c.fetchall()]
+    c = conn.execute('SELECT dni, balance FROM users')
+    data = [{'dni': r['dni'], 'balance': r['balance']} for r in c.fetchall()]
     conn.close()
     return jsonify(data)
 
@@ -59,7 +59,7 @@ def transfer():
 
     conn = get_db()
     c = conn.cursor()
-    c.execute('SELECT balance FROM users WHERE username=?', (from_user,))
+    c.execute('SELECT balance FROM users WHERE dni=?', (from_user,))
     row = c.fetchone()
     if not row:
         conn.close()
@@ -68,9 +68,9 @@ def transfer():
         conn.close()
         return jsonify({'error': 'insufficient funds'}), 400
 
-    c.execute('UPDATE users SET balance=balance-? WHERE username=?',
+    c.execute('UPDATE users SET balance=balance-? WHERE dni=?',
               (amount, from_user))
-    c.execute('UPDATE users SET balance=balance+? WHERE username=?',
+    c.execute('UPDATE users SET balance=balance+? WHERE dni=?',
               (amount, to_user))
     _record_transfer(c, from_user, to_user, amount)
     conn.commit()
@@ -85,17 +85,17 @@ def transfer_all():
         return jsonify({'error': 'to_user required'}), 400
     conn = get_db()
     c = conn.cursor()
-    c.execute('SELECT username, balance FROM users')
+    c.execute('SELECT dni, balance FROM users')
     users = c.fetchall()
     total = 0
     for u in users:
-        if u['username'] == to_user or u['balance'] <= 0:
+        if u['dni'] == to_user or u['balance'] <= 0:
             continue
         amount = u['balance']
         total += amount
-        c.execute('UPDATE users SET balance=0 WHERE username=?', (u['username'],))
-        _record_transfer(c, u['username'], to_user, amount)
-    c.execute('UPDATE users SET balance=balance+? WHERE username=?', (total, to_user))
+        c.execute('UPDATE users SET balance=0 WHERE dni=?', (u['dni'],))
+        _record_transfer(c, u['dni'], to_user, amount)
+    c.execute('UPDATE users SET balance=balance+? WHERE dni=?', (total, to_user))
     conn.commit()
     conn.close()
     return jsonify({'status': 'ok', 'transferred': total, 'to_user': to_user})
