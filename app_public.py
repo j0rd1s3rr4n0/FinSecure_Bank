@@ -112,7 +112,37 @@ def dashboard():
         'WHERE from_iban=? OR to_iban=? ORDER BY id DESC LIMIT 300',
         (user['iban'], user['iban'])
     ).fetchall()
-    return render_template('dashboard.html', user=user, transfers=transfers)
+    error = request.args.get('error')
+    msg = request.args.get('msg')
+    return render_template('dashboard.html', user=user, transfers=transfers,
+                           error=error, msg=msg)
+
+
+@app.route('/transfer', methods=['POST'])
+def make_transfer():
+    """Allow logged-in users to transfer money using IBAN."""
+    user = current_user()
+    if not user:
+        return redirect(url_for('login'))
+    to_iban = request.form.get('to_iban')
+    amount = request.form.get('amount')
+    if not to_iban or not amount:
+        return redirect(url_for('dashboard', error='Faltan campos'))
+    try:
+        float(amount)
+    except ValueError:
+        return redirect(url_for('dashboard', error='Monto inválido'))
+    try:
+        resp = requests.get(
+            'http://127.0.0.1:5001/transfer',
+            params={'from': user['iban'], 'to': to_iban, 'amount': amount},
+            timeout=5,
+        )
+        if resp.status_code != 200:
+            return redirect(url_for('dashboard', error='Error en la transferencia'))
+    except Exception:
+        return redirect(url_for('dashboard', error='Error en la transferencia'))
+    return redirect(url_for('dashboard', msg='Transferencia realizada'))
 
 @app.route('/verify_external', methods=['GET', 'POST'])
 def verify_external():

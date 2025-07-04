@@ -9,6 +9,7 @@ Este proyecto muestra una vulnerabilidad de Server Side Request Forgery (SSRF) u
 - Para iniciar sesión se utilizan DNI y contraseña.
 - Durante la inicialización se crean 250000 usuarios con fondos aleatorios.
 - En el dashboard solo se muestran las últimas 300 transferencias para mejorar el rendimiento.
+- El dashboard permite realizar transferencias indicando IBAN de destino y monto.
 - La interfaz web utiliza Bootstrap y estilos personalizados para simular un banco profesional.
 - La página de inicio presenta publicidad y ventajas si no has iniciado sesión.
 
@@ -38,7 +39,8 @@ Este proyecto muestra una vulnerabilidad de Server Side Request Forgery (SSRF) u
 ## Endpoints de la aplicación
 
 - **app_public.py** (puerto 5000)
- - `/register`, `/login` y `/dashboard`: registro mediante DNI y documento PDF, inicio de sesión con DNI y contraseña. En el *dashboard* se muestran las transferencias.
+- `/register`, `/login` y `/dashboard`: registro mediante DNI y documento PDF, inicio de sesión con DNI y contraseña. En el *dashboard* se muestran las transferencias.
+  Además cuenta con un formulario para transferir fondos introduciendo un IBAN y un monto.
   - `/verify_external`: recibe una URL y la obtiene directamente con `requests.get`. Aquí es donde se aprovecha la SSRF.
 - **app_internal.py** (puerto 5001, solo escuchando en `127.0.0.1`)
   - `/users`: lista todos los usuarios registrados con su IBAN.

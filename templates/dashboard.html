@@ -2,6 +2,12 @@
 {% block title %}Dashboard - FinSecure Bank{% endblock %}
 {% block content %}
 <h2 class="mb-4">Bienvenido {{ user['full_name'] }}</h2>
+{% if error %}
+<div class="alert alert-danger">{{ error }}</div>
+{% endif %}
+{% if msg %}
+<div class="alert alert-success">{{ msg }}</div>
+{% endif %}
 <div class="row mb-4">
   <div class="col-md-6">
     <div class="card text-white bg-success mb-3">
@@ -17,6 +23,18 @@
       <div class="card-header">Acciones</div>
       <div class="card-body">
         <a class="btn btn-outline-primary" href="{{ url_for('verify_external') }}">Verificar URL Externa</a>
+        <hr>
+        <form method="post" action="{{ url_for('make_transfer') }}">
+          <div class="mb-3">
+            <label class="form-label">IBAN destino</label>
+            <input class="form-control" name="to_iban" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Monto</label>
+            <input class="form-control" name="amount" type="number" step="0.01" required>
+          </div>
+          <button class="btn btn-primary" type="submit">Transferir</button>
+        </form>
       </div>
     </div>
   </div>
