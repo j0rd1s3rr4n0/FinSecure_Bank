@@ -41,8 +41,15 @@ def transfer():
     from_user = request.args.get('from')
     to_user = request.args.get('to')
     amount = request.args.get('amount')
-    if not from_user or not to_user or not amount:
-        return jsonify({'error': 'missing fields'}), 400
+    missing = []
+    if not from_user:
+        missing.append('from')
+    if not to_user:
+        missing.append('to')
+    if not amount:
+        missing.append('amount')
+    if missing:
+        return jsonify({'error': 'missing fields', 'fields': missing}), 400
     try:
         amount = float(amount)
     except ValueError:
