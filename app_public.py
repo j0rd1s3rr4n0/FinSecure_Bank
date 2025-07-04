@@ -1,6 +1,7 @@
 from flask import Flask, request, redirect, render_template, session, url_for, g
 import sqlite3
 import os
+import random
 import requests
 from werkzeug.utils import secure_filename
 
@@ -25,6 +26,11 @@ def valid_dni(dni: str) -> bool:
         return False
     num = int(dni[:-1])
     return dni[-1].upper() == letters[num % 23]
+
+
+def generate_iban() -> str:
+    digits = ''.join(str(random.randint(0, 9)) for _ in range(22))
+    return 'ES' + digits
 
 @app.teardown_appcontext
 def close_db(exception=None):
@@ -64,11 +70,12 @@ def register():
         with open(filepath, 'wb') as f:
             f.write(data)
         db = get_db()
+        iban = generate_iban()
         try:
             db.execute(
-                'INSERT INTO users (dni, full_name, password, doc_path, balance) '
-                'VALUES (?, ?, ?, ?, 0)',
-                (dni, fullname, password, filepath))
+                'INSERT INTO users (dni, iban, full_name, password, doc_path, balance) '
+                'VALUES (?, ?, ?, ?, ?, 0)',
+                (dni, iban, fullname, password, filepath))
             db.commit()
             return redirect(url_for('login'))
         except sqlite3.IntegrityError:
@@ -101,9 +108,9 @@ def dashboard():
         return redirect(url_for('login'))
     db = get_db()
     transfers = db.execute(
-        'SELECT from_user, to_user, amount, created FROM transfers '
-        'WHERE from_user=? OR to_user=? ORDER BY id DESC LIMIT 300',
-        (user['dni'], user['dni'])
+        'SELECT from_iban, to_iban, amount, created FROM transfers '
+        'WHERE from_iban=? OR to_iban=? ORDER BY id DESC LIMIT 300',
+        (user['iban'], user['iban'])
     ).fetchall()
     return render_template('dashboard.html', user=user, transfers=transfers)
 

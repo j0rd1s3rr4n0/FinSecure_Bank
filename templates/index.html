@@ -4,7 +4,24 @@
 <div class="py-5 text-center">
   <h1 class="display-4">Welcome to FinSecure Bank</h1>
   <p class="lead">Your trusted partner in online banking.</p>
-  <a class="btn btn-primary btn-lg" href="{{ url_for('login') }}">Login</a>
-  <a class="btn btn-secondary btn-lg" href="{{ url_for('register') }}">Register</a>
+  {% if not session.get('user_id') %}
+  <div class="row my-4">
+    <div class="col-md-4">
+      <h3>Seguridad</h3>
+      <p>Protegemos tus ahorros con la última tecnología y asistencia 24/7.</p>
+    </div>
+    <div class="col-md-4">
+      <h3>Comodidad</h3>
+      <p>Gestiona tus cuentas y pagos desde cualquier dispositivo.</p>
+    </div>
+    <div class="col-md-4">
+      <h3>Rentabilidad</h3>
+      <p>Disfruta de intereses competitivos y promociones exclusivas.</p>
+    </div>
+  </div>
+  <a class="btn btn-primary btn-lg" href="{{ url_for('register') }}">Abre tu cuenta</a>
+  {% else %}
+  <a class="btn btn-primary btn-lg" href="{{ url_for('dashboard') }}">Ir a tu panel</a>
+  {% endif %}
 </div>
 {% endblock %}

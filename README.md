@@ -5,10 +5,12 @@ Este proyecto muestra una vulnerabilidad de Server Side Request Forgery (SSRF) u
 ## Características recientes
 - Registro mediante DNI (se valida la letra con el algoritmo oficial).
 - El registro también solicita nombre completo y permite subir un PDF mayor que 0 bytes.
+- Se genera automáticamente un IBAN por usuario y se muestra en la sección `/founds`.
 - Para iniciar sesión se utilizan DNI y contraseña.
 - Durante la inicialización se crean 250000 usuarios con fondos aleatorios.
 - En el dashboard solo se muestran las últimas 300 transferencias para mejorar el rendimiento.
-- La interfaz web utiliza Bootstrap para simular la apariencia de un banco real.
+- La interfaz web utiliza Bootstrap y estilos personalizados para simular un banco profesional.
+- La página de inicio presenta publicidad y ventajas si no has iniciado sesión.
 
 ## Requisitos
 - Python 3
@@ -27,9 +29,9 @@ Este proyecto muestra una vulnerabilidad de Server Side Request Forgery (SSRF) u
 ## Realizar el ataque SSRF
 1. Registra un usuario atacante con un DNI válido, por ejemplo `12345678Z`.
 2. Desde el panel, ve a **Verify external URL**.
-3. Introduce la URL interna para transferir fondos desde otra cuenta:
+3. Introduce la URL interna para transferir fondos desde otra cuenta usando los IBAN:
    ```
-   http://127.0.0.1:5001/transfer?from=juan&to=atacante&amount=500
+   http://127.0.0.1:5001/transfer?from=ES1111111111111111111111&to=ES2222222222222222222222&amount=500
    ```
 4. El servidor público realizará la petición sin validar la dirección y moverá el dinero indicado a la cuenta del atacante. Vuelve al *dashboard* para comprobarlo.
 
@@ -39,10 +41,10 @@ Este proyecto muestra una vulnerabilidad de Server Side Request Forgery (SSRF) u
  - `/register`, `/login` y `/dashboard`: registro mediante DNI y documento PDF, inicio de sesión con DNI y contraseña. En el *dashboard* se muestran las transferencias.
   - `/verify_external`: recibe una URL y la obtiene directamente con `requests.get`. Aquí es donde se aprovecha la SSRF.
 - **app_internal.py** (puerto 5001, solo escuchando en `127.0.0.1`)
-  - `/users`: lista todos los usuarios registrados.
-  - `/founds`: devuelve el balance de cada usuario.
-  - `/transfer?from=<a>&to=<b>&amount=<n>`: transfiere la cantidad indicada del usuario `a` al usuario `b`.
-  - `/transfer_all?to_user=<usuario>`: transfiere todo el dinero de todos los usuarios al indicado en `to_user` sin autenticación (para fines de laboratorio).
+  - `/users`: lista todos los usuarios registrados con su IBAN.
+  - `/founds`: devuelve el balance e IBAN de cada usuario.
+  - `/transfer?from=<iban_a>&to=<iban_b>&amount=<n>`: transfiere la cantidad indicada de la cuenta `iban_a` a la `iban_b`.
+  - `/transfer_all?to_iban=<iban>`: transfiere todo el dinero de todos los usuarios al `iban` indicado sin autenticación (para fines de laboratorio).
 
 Tras realizar el ataque SSRF, puedes comprobar el nuevo saldo accediendo nuevamente al *dashboard* o consultando directamente el servicio interno en `http://127.0.0.1:5001`.
 

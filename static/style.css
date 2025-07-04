@@ -1,0 +1,10 @@
+body {
+    background: #eef2f7;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+.navbar {
+    background: linear-gradient(90deg, #004085, #0069d9);
+}
+.card {
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
