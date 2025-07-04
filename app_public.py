@@ -11,6 +11,14 @@ DB_NAME = 'bank.db'
 UPLOAD_FOLDER = 'docs'
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
+@app.template_filter('money')
+def money(value):
+    """Format numbers using '.' for thousands and ',' for decimals."""
+    try:
+        return '{:,.2f}'.format(float(value)).replace(',', 'X').replace('.', ',').replace('X', '.')
+    except (TypeError, ValueError):
+        return value
+
 # ---- Database helpers ----
 
 def get_db():

@@ -12,6 +12,7 @@ Este proyecto muestra una vulnerabilidad de Server Side Request Forgery (SSRF) u
 - El dashboard permite realizar transferencias indicando IBAN de destino y monto.
 - La interfaz web utiliza Bootstrap y estilos personalizados para simular un banco profesional.
 - La página de inicio presenta publicidad y ventajas si no has iniciado sesión.
+- Los saldos se muestran formateados con miles separados por `.` y decimales con `,`.
 
 ## Requisitos
 - Python 3
