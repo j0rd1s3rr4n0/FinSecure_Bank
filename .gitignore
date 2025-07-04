@@ -1,1 +1,4 @@
 /banco-ssrf
+bank.db
+__pycache__/
+docs/
