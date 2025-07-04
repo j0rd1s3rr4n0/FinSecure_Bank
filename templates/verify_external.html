@@ -1,18 +1,16 @@
 {% extends 'base.html' %}
 {% block title %}Verify URL - FinSecure Bank{% endblock %}
 {% block content %}
-<div class="row justify-content-center">
-  <div class="col-md-8">
-    <h2 class="mb-4">Verificar URL externa</h2>
-    <form method="post" class="input-group mb-3 shadow">
-      <input class="form-control" name="url" placeholder="http://example.com" required value="{{ url or '' }}">
-      <button class="btn btn-secondary" type="submit">Fetch</button>
-    </form>
-    {% if content %}
-    <h3>Resultado</h3>
-    <pre class="bg-light p-3 border">{{ content }}</pre>
-    {% endif %}
-    <a class="btn btn-link" href="{{ url_for('dashboard') }}">Volver</a>
-  </div>
+<div class="max-w-2xl mx-auto">
+  <h2 class="text-xl font-semibold mb-4">Verificar URL externa</h2>
+  <form method="post" class="flex shadow rounded overflow-hidden mb-4">
+    <input class="flex-grow border p-2" name="url" placeholder="http://example.com" required value="{{ url or '' }}">
+    <button class="bg-primary text-white px-4" type="submit">Fetch</button>
+  </form>
+  {% if content %}
+  <h3 class="font-semibold mb-2">Resultado</h3>
+  <pre class="bg-gray-50 p-4 border rounded overflow-x-auto">{{ content }}</pre>
+  {% endif %}
+  <a class="text-primary underline" href="{{ url_for('dashboard') }}">Volver</a>
 </div>
 {% endblock %}

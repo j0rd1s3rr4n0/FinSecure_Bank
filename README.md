@@ -10,7 +10,7 @@ Este proyecto muestra una vulnerabilidad de Server Side Request Forgery (SSRF) u
 - Durante la inicialización se crean 250000 usuarios con fondos aleatorios.
 - En el dashboard solo se muestran las últimas 300 transferencias para mejorar el rendimiento.
 - El dashboard permite realizar transferencias indicando IBAN de destino y monto.
-- La interfaz web utiliza Bootstrap y estilos personalizados para simular un banco profesional.
+- La interfaz web utiliza TailwindCSS vía CDN con un estilo inspirado en apps fintech modernas.
 - La página de inicio presenta publicidad y ventajas si no has iniciado sesión.
 - Los saldos se muestran formateados con miles separados por `.` y decimales con `,`.
 

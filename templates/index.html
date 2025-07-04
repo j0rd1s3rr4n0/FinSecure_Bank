@@ -1,32 +1,32 @@
 {% extends 'base.html' %}
 {% block title %}Welcome - FinSecure Bank{% endblock %}
 {% block content %}
-<div class="text-center py-5 bg-light rounded shadow-sm mb-4">
-  <h1 class="display-4">Bienvenido a FinSecure Bank</h1>
-  <p class="lead">Tu aliado seguro para todas tus gestiones bancarias.</p>
+<div class="text-center py-10 bg-white rounded-2xl shadow-md mb-6">
+  <h1 class="text-3xl font-semibold mb-2">Bienvenido a FinSecure Bank</h1>
+  <p class="text-gray-600">Tu aliado seguro para todas tus gestiones bancarias.</p>
   {% if not session.get('user_id') %}
-  <a class="btn btn-primary btn-lg my-3" href="{{ url_for('register') }}">Hazte cliente</a>
+  <a class="inline-block px-6 py-2 mt-4 rounded-full bg-primary text-white" href="{{ url_for('register') }}">Hazte cliente</a>
   {% else %}
-  <a class="btn btn-primary btn-lg my-3" href="{{ url_for('dashboard') }}">Ir a tu panel</a>
+  <a class="inline-block px-6 py-2 mt-4 rounded-full bg-primary text-white" href="{{ url_for('dashboard') }}">Ir a tu panel</a>
   {% endif %}
 </div>
 
 {% if not session.get('user_id') %}
-<div class="row text-center mb-5">
-  <div class="col-md-4 mb-4">
-    <h3>Cuentas y tarjetas</h3>
-    <p>Abre una cuenta online sin comisiones y gestiona tus tarjetas desde la app.</p>
+<div class="grid md:grid-cols-3 gap-6 text-center mb-8">
+  <div class="bg-white rounded-2xl shadow-md p-4">
+    <h3 class="font-semibold mb-2">Cuentas y tarjetas</h3>
+    <p class="text-gray-600">Abre una cuenta online sin comisiones y gestiona tus tarjetas desde la app.</p>
   </div>
-  <div class="col-md-4 mb-4">
-    <h3>Préstamos e hipotecas</h3>
-    <p>Solicita financiación con las mejores condiciones y asesoramiento experto.</p>
+  <div class="bg-white rounded-2xl shadow-md p-4">
+    <h3 class="font-semibold mb-2">Préstamos e hipotecas</h3>
+    <p class="text-gray-600">Solicita financiación con las mejores condiciones y asesoramiento experto.</p>
   </div>
-  <div class="col-md-4 mb-4">
-    <h3>Ahorro e inversión</h3>
-    <p>Haz crecer tu patrimonio con planes adaptados a tus objetivos.</p>
+  <div class="bg-white rounded-2xl shadow-md p-4">
+    <h3 class="font-semibold mb-2">Ahorro e inversión</h3>
+    <p class="text-gray-600">Haz crecer tu patrimonio con planes adaptados a tus objetivos.</p>
   </div>
 </div>
-<div class="alert alert-secondary text-center" role="alert">
+<div class="bg-gray-50 border text-center text-sm p-4 rounded">
   FinSecure Bank está adherido al Fondo de Garantía de Depósitos Español. El importe máximo garantizado es de 100.000 &euro; por depositante. <strong>1/6</strong> Este número es indicativo del menor riesgo de nuestros productos.
 </div>
 {% endif %}

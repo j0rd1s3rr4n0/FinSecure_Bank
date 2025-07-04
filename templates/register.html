@@ -1,32 +1,30 @@
 {% extends 'base.html' %}
 {% block title %}Register - FinSecure Bank{% endblock %}
 {% block content %}
-<div class="row justify-content-center">
-  <div class="col-md-6">
-    <h2 class="mb-4">Registro</h2>
-    {% if error %}
-    <div class="alert alert-danger">{{ error }}</div>
-    {% endif %}
-    <form method="post" enctype="multipart/form-data" class="card p-4 bg-light shadow">
-      <div class="mb-3">
-        <label class="form-label">DNI</label>
-        <input class="form-control" name="dni" required>
-      </div>
-      <div class="mb-3">
-        <label class="form-label">Nombre completo</label>
-        <input class="form-control" name="fullname" required>
-      </div>
-      <div class="mb-3">
-        <label class="form-label">Contraseña</label>
-        <input class="form-control" type="password" name="password" required>
-      </div>
-      <div class="mb-3">
-        <label class="form-label">Documento PDF</label>
-        <input class="form-control" type="file" name="document" accept="application/pdf" required>
-      </div>
-      <button class="btn btn-primary" type="submit">Registrar</button>
-    </form>
-    <p class="mt-3">¿Ya tienes cuenta? <a href="{{ url_for('login') }}">Inicia sesión</a>.</p>
-  </div>
+<div class="max-w-md mx-auto">
+  <h2 class="text-xl font-semibold mb-4">Registro</h2>
+  {% if error %}
+  <div class="bg-red-100 border border-red-300 text-red-700 p-2 rounded mb-4">{{ error }}</div>
+  {% endif %}
+  <form method="post" enctype="multipart/form-data" class="bg-white rounded-2xl shadow-md p-6 space-y-4">
+    <div>
+      <label class="block text-sm font-medium mb-1">DNI</label>
+      <input class="w-full border-gray-300 rounded-md p-2" name="dni" required>
+    </div>
+    <div>
+      <label class="block text-sm font-medium mb-1">Nombre completo</label>
+      <input class="w-full border-gray-300 rounded-md p-2" name="fullname" required>
+    </div>
+    <div>
+      <label class="block text-sm font-medium mb-1">Contraseña</label>
+      <input class="w-full border-gray-300 rounded-md p-2" type="password" name="password" required>
+    </div>
+    <div>
+      <label class="block text-sm font-medium mb-1">Documento PDF</label>
+      <input class="w-full border-gray-300 rounded-md p-2" type="file" name="document" accept="application/pdf" required>
+    </div>
+    <button class="w-full bg-primary text-white py-2 rounded-md" type="submit">Registrar</button>
+  </form>
+  <p class="mt-3 text-sm text-center">¿Ya tienes cuenta? <a class="text-primary hover:underline" href="{{ url_for('login') }}">Inicia sesión</a>.</p>
 </div>
 {% endblock %}

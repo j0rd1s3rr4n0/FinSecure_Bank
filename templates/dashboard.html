@@ -1,60 +1,63 @@
 {% extends 'base.html' %}
 {% block title %}Dashboard - FinSecure Bank{% endblock %}
 {% block content %}
-<h2 class="mb-4">Bienvenido {{ user['full_name'] }}</h2>
+<h2 class="text-xl font-semibold mb-6">Bienvenido {{ user['full_name'] }}</h2>
 {% if error %}
-<div class="alert alert-danger">{{ error }}</div>
+<div class="bg-red-100 text-red-700 p-2 rounded mb-4">{{ error }}</div>
 {% endif %}
 {% if msg %}
-<div class="alert alert-success">{{ msg }}</div>
+<div class="bg-green-100 text-green-700 p-2 rounded mb-4">{{ msg }}</div>
 {% endif %}
-<div class="row mb-4">
-  <div class="col-md-6">
-    <div class="card text-white bg-success mb-3">
-      <div class="card-header">Saldo actual</div>
-      <div class="card-body">
-        <h3 class="card-title">{{ user['balance']|money }} €</h3>
-        <p class="card-text">IBAN: {{ user['iban'] }}<br>DNI: {{ user['dni'] }}</p>
-      </div>
-    </div>
+<div class="grid md:grid-cols-2 gap-6 mb-6">
+  <div class="bg-primary text-white p-6 rounded-2xl shadow-md">
+    <div class="text-sm">Saldo actual</div>
+    <div class="text-3xl font-semibold">{{ user['balance']|money }} €</div>
+    <div class="text-sm mt-2">IBAN: {{ user['iban'] }}<br>DNI: {{ user['dni'] }}</div>
   </div>
-  <div class="col-md-6 d-flex align-items-stretch">
-    <div class="card w-100">
-      <div class="card-header">Acciones</div>
-      <div class="card-body">
-        <a class="btn btn-outline-primary" href="{{ url_for('verify_external') }}">Verificar URL Externa</a>
-        <hr>
-        <form method="post" action="{{ url_for('make_transfer') }}">
-          <div class="mb-3">
-            <label class="form-label">IBAN destino</label>
-            <input class="form-control" name="to_iban" required>
-          </div>
-          <div class="mb-3">
-            <label class="form-label">Monto</label>
-            <input class="form-control" name="amount" type="number" step="0.01" required>
-          </div>
-          <button class="btn btn-primary" type="submit">Transferir</button>
-        </form>
+  <div id="transfer-form" class="bg-white p-6 rounded-2xl shadow-md">
+    <h3 class="font-semibold mb-4">Acciones</h3>
+    <a class="text-primary underline" href="{{ url_for('verify_external') }}">Verificar URL Externa</a>
+    <hr class="my-4">
+    <form method="post" action="{{ url_for('make_transfer') }}" class="space-y-4">
+      <div>
+        <label class="block text-sm font-medium mb-1">IBAN destino</label>
+        <input class="w-full border-gray-300 rounded-md p-2" name="to_iban" required>
       </div>
-    </div>
+      <div>
+        <label class="block text-sm font-medium mb-1">Monto</label>
+        <input class="w-full border-gray-300 rounded-md p-2" name="amount" type="number" step="0.01" required>
+      </div>
+      <button class="w-full bg-primary text-white py-2 rounded-md" type="submit">Transferir</button>
+    </form>
   </div>
 </div>
-<h3>Historial de transferencias</h3>
-<table class="table table-striped">
-  <thead>
-    <tr><th>De</th><th>A</th><th>Monto</th><th>Fecha</th></tr>
-  </thead>
-  <tbody>
-  {% for t in transfers %}
-    <tr>
-      <td>{{ t['from_iban'] or 'system' }}</td>
-      <td>{{ t['to_iban'] }}</td>
-      <td>{{ t['amount']|money }} €</td>
-      <td>{{ t['created'] }}</td>
-    </tr>
-  {% else %}
-    <tr><td colspan="4" class="text-center">Sin transferencias</td></tr>
-  {% endfor %}
-  </tbody>
-</table>
+<h3 class="font-semibold mb-2">Historial de transferencias</h3>
+<div class="bg-white rounded-2xl shadow-md overflow-x-auto">
+  <table class="min-w-full text-sm">
+    <thead class="bg-gray-50">
+      <tr class="text-left">
+        <th class="p-2">De</th>
+        <th class="p-2">A</th>
+        <th class="p-2">Monto</th>
+        <th class="p-2">Fecha</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for t in transfers %}
+      <tr class="border-t">
+        <td class="p-2">{{ t['from_iban'] or 'system' }}</td>
+        <td class="p-2">{{ t['to_iban'] }}</td>
+        <td class="p-2 {% if t['to_iban'] == user['iban'] %}text-green-600{% else %}text-red-500{% endif %}">
+          {{ t['amount']|money }} €
+        </td>
+        <td class="p-2">{{ t['created'] }}</td>
+      </tr>
+    {% else %}
+      <tr><td colspan="4" class="p-4 text-center">Sin transferencias</td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<a href="#transfer-form" class="fixed bottom-6 right-6 bg-primary text-white w-12 h-12 flex items-center justify-center rounded-full shadow-lg text-2xl">+</a>
 {% endblock %}
