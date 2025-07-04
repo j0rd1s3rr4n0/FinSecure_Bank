@@ -17,11 +17,11 @@ Este proyecto muestra una vulnerabilidad de Server Side Request Forgery (SSRF) u
 ## Realizar el ataque SSRF
 1. Registra un usuario atacante, por ejemplo `atacante`.
 2. Desde el panel, ve a **Verify external URL**.
-3. Introduce la URL interna:
+3. Introduce la URL interna para transferir fondos desde otra cuenta:
    ```
-   http://127.0.0.1:5001/internal/transfer_all?to_user=atacante
+   http://127.0.0.1:5001/transfer?from=juan&to=atacante&amount=500
    ```
-4. El servidor público realizará la petición sin validar la dirección y transferirá el saldo de todos los usuarios al atacante. Vuelve al *dashboard* para comprobarlo.
+4. El servidor público realizará la petición sin validar la dirección y moverá el dinero indicado a la cuenta del atacante. Vuelve al *dashboard* para comprobarlo.
 
 ## Endpoints de la aplicación
 
@@ -29,11 +29,10 @@ Este proyecto muestra una vulnerabilidad de Server Side Request Forgery (SSRF) u
   - `/register`, `/login` y `/dashboard`: flujo básico de registro e inicio de sesión. En el *dashboard* también se muestran las transferencias entrantes y salientes.
   - `/verify_external`: recibe una URL y la obtiene directamente con `requests.get`. Aquí es donde se aprovecha la SSRF.
 - **app_internal.py** (puerto 5001, solo escuchando en `127.0.0.1`)
-  - `/internal/users`: lista todos los usuarios registrados.
-  - `/internal/balances`: muestra el balance de cada usuario.
-  - `/internal/transfer` (POST JSON): permite transferir dinero de un usuario a otro.
-  - `/internal/transfer_all?to_user=<usuario>`: transfiere todo el dinero de todos los usuarios al indicado en `to_user` sin autenticación.
-    Este endpoint se diseñó para estar expuesto únicamente internamente, por lo que el puerto 5001 no debería ser accesible desde Internet.
+  - `/users`: lista todos los usuarios registrados.
+  - `/founds`: devuelve el balance de cada usuario.
+  - `/transfer?from=<a>&to=<b>&amount=<n>`: transfiere la cantidad indicada del usuario `a` al usuario `b`.
+  - `/transfer_all?to_user=<usuario>`: transfiere todo el dinero de todos los usuarios al indicado en `to_user` sin autenticación (para fines de laboratorio).
 
 Tras realizar el ataque SSRF, puedes comprobar el nuevo saldo accediendo nuevamente al *dashboard* o consultando directamente el servicio interno en `http://127.0.0.1:5001`.
 

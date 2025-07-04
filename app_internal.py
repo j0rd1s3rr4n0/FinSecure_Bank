@@ -11,7 +11,7 @@ def get_db():
     conn.row_factory = sqlite3.Row
     return conn
 
-@app.route('/internal/users')
+@app.route('/users')
 def list_users():
     """Return list of all usernames."""
     conn = get_db()
@@ -21,8 +21,8 @@ def list_users():
     return jsonify({'users': data})
 
 
-@app.route('/internal/balances')
-def list_balances():
+@app.route('/founds')
+def get_founds():
     """Return balances for all users."""
     conn = get_db()
     c = conn.execute('SELECT username, balance FROM users')
@@ -36,12 +36,11 @@ def _record_transfer(c, from_user, to_user, amount):
               (from_user, to_user, amount))
 
 
-@app.route('/internal/transfer', methods=['POST'])
+@app.route('/transfer')
 def transfer():
-    data = request.get_json() or {}
-    from_user = data.get('from_user')
-    to_user = data.get('to_user')
-    amount = data.get('amount')
+    from_user = request.args.get('from')
+    to_user = request.args.get('to')
+    amount = request.args.get('amount')
     if not from_user or not to_user or not amount:
         return jsonify({'error': 'missing fields'}), 400
     try:
@@ -72,7 +71,7 @@ def transfer():
     return jsonify({'status': 'ok', 'from_user': from_user, 'to_user': to_user, 'amount': amount})
 
 
-@app.route('/internal/transfer_all')
+@app.route('/transfer_all')
 def transfer_all():
     to_user = request.args.get('to_user')
     if not to_user:
