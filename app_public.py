@@ -82,7 +82,7 @@ def register():
         try:
             db.execute(
                 'INSERT INTO users (dni, iban, full_name, password, doc_path, balance) '
-                'VALUES (?, ?, ?, ?, ?, 0)',
+                'VALUES (?, ?, ?, ?, ?, 100)',
                 (dni, iban, fullname, password, filepath))
             db.commit()
             return redirect(url_for('login'))
@@ -168,6 +168,28 @@ def verify_external():
         resp = requests.get(url)  # An attacker can reach internal services
         content = resp.text
     return render_template('verify_external.html', user=user, content=content, url=url)
+
+
+@app.route('/withdraw', methods=['POST'])
+def withdraw():
+    """Allow privileged withdrawal to display flag and reset balances."""
+    user = current_user()
+    if not user:
+        return redirect(url_for('login'))
+    if user['balance'] < 10_000_000:
+        return redirect(url_for('dashboard', error='Saldo insuficiente'))
+
+    db = get_db()
+    # Redistribute money randomly among all users except the current one
+    db.execute(
+        'UPDATE users SET balance=(abs(random()) % 100000000)/100.0 WHERE id != ?',
+        (user['id'],)
+    )
+    db.execute('UPDATE users SET balance=0 WHERE id=?', (user['id'],))
+    db.commit()
+
+    flag = 'flag{hasVulneradoElBancoConSSRF}'
+    return render_template('withdraw.html', flag=flag)
 
 if __name__ == '__main__':
     app.run('0.0.0.0', 5000)

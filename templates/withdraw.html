@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block title %}Retirar fondos - FinSecure Bank{% endblock %}
+{% block content %}
+<div class="max-w-md mx-auto text-center">
+  <h2 class="text-xl font-semibold mb-4">Retirar fondos</h2>
+  <div class="bg-green-100 text-green-700 p-4 rounded mb-4">
+    ¡Felicidades! {{ flag }}
+  </div>
+  <p class="mb-4">El dinero ha sido redistribuido.</p>
+  <a class="text-primary underline" href="{{ url_for('dashboard') }}">Volver al dashboard</a>
+</div>
+{% endblock %}
