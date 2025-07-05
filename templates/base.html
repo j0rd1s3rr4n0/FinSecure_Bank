@@ -15,22 +15,22 @@
       }
     </script>
 </head>
-<body class="bg-gray-100 font-sans text-gray-800">
+<body class="bg-gray-100 font-sans text-gray-800 min-h-screen flex flex-col">
 <nav class="bg-primary text-white fixed w-full z-10">
-  <div class="container mx-auto flex justify-between items-center py-3 px-4">
+  <div class="container mx-auto flex flex-col sm:flex-row justify-between items-center py-3 px-4 gap-y-2">
     <a href="{{ url_for('index') }}" class="font-semibold">FinSecure Bank</a>
-    <div>
+    <div class="flex space-x-4">
       {% if session.get('user_id') %}
-        <a class="mr-4 hover:underline" href="{{ url_for('dashboard') }}">Dashboard</a>
+        <a class="hover:underline" href="{{ url_for('dashboard') }}">Dashboard</a>
         <a class="hover:underline" href="{{ url_for('logout') }}">Logout</a>
       {% else %}
-        <a class="mr-4 hover:underline" href="{{ url_for('login') }}">Login</a>
+        <a class="hover:underline" href="{{ url_for('login') }}">Login</a>
         <a class="hover:underline" href="{{ url_for('register') }}">Register</a>
       {% endif %}
     </div>
   </div>
 </nav>
-<main class="container mx-auto pt-20 px-4">
+<main class="container mx-auto pt-20 px-4 flex-grow">
 {% block content %}{% endblock %}
 </main>
 <footer class="bg-gray-800 text-gray-100 mt-12">
