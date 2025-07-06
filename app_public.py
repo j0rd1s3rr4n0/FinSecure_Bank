@@ -136,10 +136,12 @@ def make_transfer():
     amount = request.form.get('amount')
     if not to_iban or not amount:
         return redirect(url_for('dashboard', error='Faltan campos'))
+    if to_iban == user['iban']:
+        return redirect(url_for('dashboard', error='No puedes transferirte a ti mismo'))
     try:
         float(amount)
     except ValueError:
-        return redirect(url_for('dashboard', error='Monto inválido'))
+        return redirect(url_for('dashboard', error='Importe inválido'))
     internal_url = 'http://127.0.0.1:5001/transfer'
     try:
         resp = requests.get(
