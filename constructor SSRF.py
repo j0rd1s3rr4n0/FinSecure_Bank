@@ -266,5 +266,5 @@ with open(os.path.join(FOLDER, "logout.php"), "w", encoding="utf-8") as f:
 
 print("¡Listo! Todos los archivos han sido creados en la carpeta 'banco-ssrf'.")
 print("Puedes copiar la carpeta a tu servidor PHP o ejecutar:")
-print("    cd banco-ssrf && php -S 0.0.0.0:8080")
+print("    cd banco-ssrf && php -S 0.0.0.0:443")
 print("Acceso: alice/alice123 | bob/bob123 | eve/eve123")

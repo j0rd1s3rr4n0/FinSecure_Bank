@@ -139,8 +139,8 @@ def make_transfer():
     try:
         float(amount)
     except ValueError:
-        return redirect(url_for('dashboard', error='Monto inválido'))
-    internal_url = 'http://127.0.0.1:5001/transfer'
+        return redirect(url_for('dashboard', error='Importe inválido'))
+    internal_url = 'http://127.0.0.1:443/transfer'
     try:
         resp = requests.get(
             internal_url,
@@ -152,7 +152,7 @@ def make_transfer():
     except Exception:
         return redirect(url_for('dashboard', error='Error en la transferencia'))
 
-    msg = f'Transferencia realizada mediante {internal_url}'
+    msg = f'<script>console.log(\'Transferencia realizada mediante {internal_url}\')</script>Transferencia realizada'
     return redirect(url_for('dashboard', msg=msg))
 
 @app.route('/verify_external', methods=['GET', 'POST'])
@@ -192,4 +192,4 @@ def withdraw():
     return render_template('withdraw.html', flag=flag)
 
 if __name__ == '__main__':
-    app.run('0.0.0.0', 5000)
+    app.run('0.0.0.0', 80)

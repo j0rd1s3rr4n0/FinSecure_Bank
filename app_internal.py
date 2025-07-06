@@ -103,4 +103,4 @@ def transfer_all():
     return jsonify({'status': 'ok', 'transferred': total, 'to_iban': to_user})
 
 if __name__ == '__main__':
-    app.run('127.0.0.1', 5001)
+    app.run('127.0.0.1', 443)
