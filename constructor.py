@@ -1028,11 +1028,11 @@ require_once 'db.php';
 // Obtener parámetros
 $origen = $_GET['origen'] ?? '';
 $destino = $_GET['destino'] ?? '';
-$monto = floatval($_GET['monto'] ?? 0);
+$Importe = floatval($_GET['Importe'] ?? 0);
 
 // Validar parámetros
-if (empty($origen) || empty($destino) || $monto <= 0) {
-    die("Parámetros inválidos. Se requieren origen, destino y monto.");
+if (empty($origen) || empty($destino) || $Importe <= 0) {
+    die("Parámetros inválidos. Se requieren origen, destino y Importe.");
 }
 
 // Verificar saldo del origen
@@ -1045,7 +1045,7 @@ if (!$row) {
     die("Usuario origen no encontrado");
 }
 
-if ($row['saldo'] < $monto) {
+if ($row['saldo'] < $Importe) {
     die("Saldo insuficiente");
 }
 
@@ -1064,18 +1064,18 @@ $db->exec('BEGIN');
 try {
     // Restar del origen
     $update_origen = $db->prepare("UPDATE usuarios SET saldo = saldo - :m WHERE username = :u");
-    $update_origen->bindValue(':m', $monto, SQLITE3_FLOAT);
+    $update_origen->bindValue(':m', $Importe, SQLITE3_FLOAT);
     $update_origen->bindValue(':u', $origen, SQLITE3_TEXT);
     $update_origen->execute();
 
     // Sumar al destino
     $update_destino = $db->prepare("UPDATE usuarios SET saldo = saldo + :m WHERE username = :u");
-    $update_destino->bindValue(':m', $monto, SQLITE3_FLOAT);
+    $update_destino->bindValue(':m', $Importe, SQLITE3_FLOAT);
     $update_destino->bindValue(':u', $destino, SQLITE3_TEXT);
     $update_destino->execute();
 
     $db->exec('COMMIT');
-    echo "Transferencia exitosa: €" . number_format($monto, 2) . " transferidos de $origen a $destino";
+    echo "Transferencia exitosa: €" . number_format($Importe, 2) . " transferidos de $origen a $destino";
 } catch (Exception $e) {
     $db->exec('ROLLBACK');
     die("Error en la transferencia: " . $e->getMessage());
@@ -1269,11 +1269,11 @@ $stmt->bindValue(':u', $username, SQLITE3_TEXT);
 $user = $stmt->execute()->fetchArray(SQLITE3_ASSOC);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $monto = floatval($_POST['monto'] ?? 0);
+    $Importe = floatval($_POST['Importe'] ?? 0);
     
-    if ($monto <= 0) {
-        $error = "Monto inválido. Introduce un valor positivo.";
-    } elseif ($monto > $user['saldo']) {
+    if ($Importe <= 0) {
+        $error = "Importe inválido. Introduce un valor positivo.";
+    } elseif ($Importe > $user['saldo']) {
         $error = "Saldo insuficiente para realizar esta operación.";
     } else {
         // Verificar si tiene 30 millones para mostrar la flag
@@ -1281,7 +1281,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         
         // Actualizar saldo
         $update = $db->prepare("UPDATE usuarios SET saldo = saldo - :m WHERE username = :u");
-        $update->bindValue(':m', $monto, SQLITE3_FLOAT);
+        $update->bindValue(':m', $Importe, SQLITE3_FLOAT);
         $update->bindValue(':u', $username, SQLITE3_TEXT);
         $update->execute();
         
@@ -1292,7 +1292,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($mostrar_flag) {
             $success = "¡Felicidades! " . $flag;
         } else {
-            $success = "Retiro exitoso de €" . number_format($monto, 2, ',', '.');
+            $success = "Retiro exitoso de €" . number_format($Importe, 2, ',', '.');
         }
     }
 }
@@ -1530,8 +1530,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             
             <form method="POST">
                 <div class="input-group">
-                    <label class="input-label">Monto a retirar (€)</label>
-                    <input class="input-field" type="number" step="0.01" min="0.01" name="monto" placeholder="Ej: 500.00" required>
+                    <label class="input-label">Importe a retirar (€)</label>
+                    <input class="input-field" type="number" step="0.01" min="0.01" name="Importe" placeholder="Ej: 500.00" required>
                 </div>
                 
                 <?php if(isset($error)): ?>
@@ -1584,6 +1584,6 @@ print("\nPara explotar la vulnerabilidad SSRF:")
 print("1. Inicia sesión como eve (eve/eve123)")
 print("2. En el panel, ve a 'Consultas externas'")
 print("3. Usa esta URL para transferir fondos:")
-print("   http://localhost:443/transferir.php?origen=alice&destino=eve&monto=30000000")
+print("   http://localhost:443/transferir.php?origen=alice&destino=eve&Importe=30000000")
 print("4. Regresa al panel y haz clic en 'Retirar fondos'")
 print("5. Realiza cualquier retiro para obtener la flag\n")

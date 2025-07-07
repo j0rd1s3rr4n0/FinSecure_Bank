@@ -87,7 +87,7 @@ def init_db():
     )
 
     batch = []
-    for i in range(25_000):
+    for i in range(5_000):
         num = 30000000 + i
         dni = f"{num}{dni_letter(num)}"
         iban = generate_iban()

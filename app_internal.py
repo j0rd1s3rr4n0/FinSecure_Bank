@@ -25,8 +25,8 @@ def list_users():
 def get_founds():
     """Return balances and IBANs for all users."""
     conn = get_db()
-    c = conn.execute('SELECT dni, iban, balance FROM users')
-    data = [{'dni': r['dni'], 'iban': r['iban'], 'balance': r['balance']} for r in c.fetchall()]
+    c = conn.execute('SELECT iban, balance FROM users')
+    data = [{'iban': r['iban'], 'balance': r['balance']} for r in c.fetchall()]
     conn.close()
     return jsonify(data)
 
