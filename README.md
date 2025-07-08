@@ -90,7 +90,7 @@ Una vez iniciado, visita 👉 `http://localhost`
 
 ## 📡 Endpoints
 
-### 🌐 app\_public.py (puerto 5000)
+### 🌐 app\_public.py (puerto 80)
 
 | Ruta               | Descripción                                                     |
 |  |  |
