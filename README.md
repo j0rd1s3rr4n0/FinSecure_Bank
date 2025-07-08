@@ -1,6 +1,6 @@
 
 <p align="center">
-  <img src="FinSecureBankSSRF.webp" alt="SSRF Demo Logo" width="100%">
+  <img src="assets/FinSecureBankSSRF.webp" alt="SSRF Demo Logo" width="100%">
 </p>
 
 
