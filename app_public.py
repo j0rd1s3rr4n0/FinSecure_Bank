@@ -192,4 +192,4 @@ def withdraw():
     return render_template('withdraw.html', flag=flag)
 
 if __name__ == '__main__':
-    app.run('0.0.0.0', 80)
+    app.run('0.0.0.0', 80,debug=False)
