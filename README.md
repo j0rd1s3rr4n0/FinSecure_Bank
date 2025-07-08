@@ -18,7 +18,7 @@
   <a href="#-endpoints">📡 Endpoints</a> • 
   <a href="#-mitigación">🛡️ Mitigación</a> • 
   <a href="#-estructura-del-proyecto">🗂️ Estructura</a> • 
-  <a href="#-licencia">📄 Licencia</a>
+  <a href="#-explotación-automática">📄 Licencia</a>
 </p>
 
 
@@ -151,7 +151,7 @@ El script [`exploit/exploit.py`](exploit/exploit.py) automatiza el ataque SSRF. 
 
 ## 📄 Licencia
 
-Este proyecto es solo para uso **educativo**. No está diseñado para producción ni debe ser utilizado con fines maliciosos.
+Este proyecto es solo para uso **educativo**. No está diseñado para producción ni debe ser utilizado con fines maliciosos. [LICENCIA MIT](LICENSE.MD)
 
 
 
