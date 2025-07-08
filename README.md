@@ -1,60 +1,160 @@
-# SSRF Demo
+<!--
+<p align="center">
+  <img src="assets/logo.png" alt="SSRF Demo Logo" width="180">
+</p>
+-->
 
-Este proyecto muestra una vulnerabilidad de Server Side Request Forgery (SSRF) usando Flask.
+<h1 align="center">SSRF Demo Lab</h1>
+<p align="center">
+  <strong>Laboratorio interactivo para comprender y explotar vulnerabilidades de <code>Server-Side Request Forgery (SSRF)</code></strong><br/>
+  Simulación de una app bancaria moderna con una falla crítica en su arquitectura interna.
+</p>
 
-## Características recientes
-- Registro mediante DNI (se valida la letra con el algoritmo oficial).
-- El registro también solicita nombre completo y permite subir un PDF mayor que 0 bytes.
-- Se genera automáticamente un IBAN por usuario y se muestra en la sección `/founds`.
-- Para iniciar sesión se utilizan DNI y contraseña.
-- Durante la inicialización se crean 250000 usuarios con fondos aleatorios.
-- En el dashboard solo se muestran las últimas 300 transferencias para mejorar el rendimiento.
-- El dashboard permite realizar transferencias indicando IBAN de destino y Importe.
-- La interfaz web utiliza TailwindCSS vía CDN con un estilo inspirado en apps fintech modernas.
-- La página de inicio presenta publicidad y ventajas si no has iniciado sesión.
-- Se añadió una cabecera con imagen destacada y un pie de página con iconos de contacto.
-- La portada ahora usa ilustraciones SVG locales y secciones promocionales con testimonios.
-- Los saldos se muestran formateados con miles separados por `.` y decimales con `,`.
+<p align="center">
+  <a href="#%EF%B8%8F-características">⚙️ Características</a> • 
+  <a href="#-requisitos">📦 Requisitos</a> • 
+  <a href="#-ejecución">🚀 Ejecución</a> • 
+  <a href="#-ataque-ssrf">🎯 Ataque SSRF</a> • 
+  <a href="#-endpoints">📡 Endpoints</a> • 
+  <a href="#-mitigación">🛡️ Mitigación</a> • 
+  <a href="#-estructura-del-proyecto">🗂️ Estructura</a> • 
+  <a href="#-licencia">📄 Licencia</a>
+</p>
 
-## Requisitos
-- Python 3
-- Dependencias: `pip install -r requirements.txt`
 
-## Uso
-1. Ejecuta `python run.py` para iniciar el laboratorio. El script inicializa `bank.db` y lanza dos servidores:
-   - **Servidor interno** en `127.0.0.1:443` (app_internal.py).
-   - **Servidor público** en `0.0.0.0:5000` (app_public.py).
-   
-   También puedes ejecutarlos por separado con `python app_internal.py` y `python app_public.py`.
-2. Abre `http://localhost:5000` en tu navegador y registra o inicia sesión con un usuario.
-   El formulario de registro solicita DNI (con la letra correcta), nombre completo,
-   contraseña y un documento PDF.
 
-## Realizar el ataque SSRF
-1. Registra un usuario atacante con un DNI válido, por ejemplo `12345678Z`.
-2. Desde el panel, ve a **Verify external URL**.
-3. Introduce la URL interna para transferir fondos desde otra cuenta usando los IBAN:
+## ⚙️ Características
+
+> La aplicación imita un banco online con lógica realista y estética moderna. Pensada para demostrar cómo una mala validación de peticiones externas puede comprometer toda la infraestructura interna.
+
+- ✅ Registro de usuarios mediante **DNI válido** (letra calculada con algoritmo real).
+- ✅ Subida de PDF obligatoria durante el registro (valida que no esté vacío).
+- ✅ Se generan **250.000 usuarios con saldos aleatorios** al arrancar el sistema.
+- ✅ Dashboard de usuario con transferencias y formulario para mover fondos.
+- ✅ Estética inspirada en fintech real, usando **TailwindCSS** vía CDN.
+- ✅ Portada personalizada con SVGs, testimonios, ventajas y llamada a la acción.
+- ✅ Pie de página con enlaces útiles y cabecera visual atractiva.
+- ✅ Saldos formateados al estilo europeo: `1.234,56 €`.
+
+
+
+## 📦 Requisitos
+
+- Python 3.7 o superior
+- Instalar dependencias con:
+```bash
+  pip install -r requirements.txt
+```
+
+
+
+## 🚀 Ejecución
+
+Lanza el entorno completo con:
+
+```bash
+python run.py
+```
+
+Esto inicia:
+
+| Servicio          | Puerto          | Descripción                        |
+| -- |  | - |
+| `app_internal.py` | `127.0.0.1:443` | Backend bancario interno           |
+| `app_public.py`   | `0.0.0.0:80`  | Interfaz web accesible al atacante |
+
+También puedes ejecutarlos por separado:
+
+```bash
+python app_internal.py
+python app_public.py
+```
+
+Una vez iniciado, visita 👉 `http://localhost`
+
+
+
+## 🎯 Ataque SSRF
+
+1. Regístrate con un DNI válido (ej. `12345678Z`) y sube un PDF cualquiera.
+2. Accede al *dashboard* y localiza la sección **"Verificar URL externa"**.
+3. Introduce una URL interna como:
+
    ```
-   http://127.0.0.1:443/transfer?from=ES1111111111111111111111&to=ES2222222222222222222222&amount=500
+   http://127.0.0.1:443/transfer?from=ES111...&to=ES222...&amount=500
    ```
-4. El servidor público realizará la petición sin validar la dirección y moverá el dinero indicado a la cuenta del atacante. Vuelve al *dashboard* para comprobarlo.
+4. El servidor hará una petición interna sin validar y transferirá fondos desde la cuenta objetivo.
+5. Vuelve al *dashboard* para ver tu nuevo saldo enriquecido 🤑.
 
-## Endpoints de la aplicación
 
-- **app_public.py** (puerto 5000)
-- `/register`, `/login` y `/dashboard`: registro mediante DNI y documento PDF, inicio de sesión con DNI y contraseña. En el *dashboard* se muestran las transferencias.
-  Además cuenta con un formulario para transferir fondos introduciendo un IBAN y un Importe.
-  Al enviarlo, el servidor hace una petición interna a `http://127.0.0.1:443/transfer` y muestra
-  un mensaje indicando la URL utilizada.
-  - `/verify_external`: recibe una URL y la obtiene directamente con `requests.get`. Aquí es donde se aprovecha la SSRF.
-- **app_internal.py** (puerto 443, solo escuchando en `127.0.0.1`)
-  - `/users`: lista todos los usuarios registrados con su IBAN.
-  - `/founds`: devuelve el balance e IBAN de cada usuario.
-  - `/transfer?from=<iban_a>&to=<iban_b>&amount=<n>`: transfiere la cantidad indicada de la cuenta `iban_a` a la `iban_b`.
-  - `/transfer_all?to_iban=<iban>`: transfiere todo el dinero de todos los usuarios al `iban` indicado sin autenticación (para fines de laboratorio).
 
-Tras realizar el ataque SSRF, puedes comprobar el nuevo saldo accediendo nuevamente al *dashboard* o consultando directamente el servicio interno en `http://127.0.0.1:443`.
+## 📡 Endpoints
 
-## Explicación
-- El endpoint `/verify_external` en `app_public.py` envía la URL recibida directamente con `requests.get`, permitiendo acceder a servicios internos.
-- Una solución sería validar las URLs permitidas o realizar la petición desde el cliente en lugar del servidor.
+### 🌐 app\_public.py (puerto 5000)
+
+| Ruta               | Descripción                                                     |
+|  |  |
+| `/`                | Portada informativa estilo fintech                              |
+| `/register`        | Registro con validación de DNI y PDF                            |
+| `/login`           | Login con DNI y contraseña                                      |
+| `/dashboard`       | Vista de cuenta + formulario de transferencia                   |
+| `/verify_external` | **Vulnerable SSRF**: realiza `requests.get(url)` sin validación |
+
+### 🔒 app\_internal.py (puerto 443)
+
+| Ruta            | Descripción                                                     |
+|  |  |
+| `/users`        | Muestra todos los usuarios y sus IBAN                           |
+| `/founds`       | Devuelve saldos por usuario                                     |
+| `/transfer`     | Transferencia entre IBANs vía GET                               |
+| `/transfer_all` | Vuelca fondos de todos al IBAN especificado (solo para pruebas) |
+
+
+
+## 🛡️ Mitigación
+
+Este proyecto es vulnerable por diseño. Sin embargo, en una app real:
+
+* ✅ **Validar URLs** antes de usarlas (`.startswith('https://trusted.com')`)
+* ✅ Evitar peticiones del servidor hacia direcciones externas arbitrarias
+* ✅ Usar listas blancas o proxies internos con reglas de salida
+* ✅ Realizar estas verificaciones en el cliente siempre que sea posible
+* ✅ Implementar firewalls a nivel de red para bloquear tráfico loopback
+
+
+
+## 🗂️ Estructura del Proyecto
+
+```
+ssrf-demo/
+├── app_internal.py       # API interna simulada
+├── app_public.py         # Interfaz vulnerable expuesta
+├── run.py                # Inicia ambos servidores
+├── bank.db               # Base de datos SQLite
+├── requirements.txt
+├── static/               # Estilos, imágenes, etc.
+├── templates/            # HTML con Jinja2
+├── assets/
+│   └── logo.png          # Logo del proyecto
+├── exploit/
+│   └── exploit.py        # Script de explotación (ver README dentro)
+└── README.md
+```
+
+
+
+## 🧪 Explotación Automática
+
+El script [`exploit/exploit.py`](exploit/exploit.py) automatiza el ataque SSRF. Consulta su [README específico](exploit/README.md) para más detalles y ejecución paso a paso.
+
+
+
+## 📄 Licencia
+
+Este proyecto es solo para uso **educativo**. No está diseñado para producción ni debe ser utilizado con fines maliciosos.
+
+
+
+<p align="center">
+  <strong>SSRF DEMO LAB — Aprende. Rompe. Protege.</strong>
+</p>
