@@ -1,8 +1,8 @@
-<!--
+
 <p align="center">
-  <img src="assets/logo.png" alt="SSRF Demo Logo" width="180">
+  <img src="FinSecureBankSSRF.webp" alt="SSRF Demo Logo" width="180">
 </p>
--->
+
 
 <h1 align="center">SSRF Demo Lab</h1>
 <p align="center">
