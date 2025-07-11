@@ -59,9 +59,10 @@ python run.py
 Esto inicia:
 
 | Servicio          | Puerto          | Descripción                        |
-| -- |  | - |
+|-------------------|-----------------|------------------------------------|
 | `app_internal.py` | `127.0.0.1:443` | Backend bancario interno           |
-| `app_public.py`   | `0.0.0.0:80`  | Interfaz web accesible al atacante |
+| `app_public.py`   | `0.0.0.0:80`    | Interfaz web accesible al atacante |
+
 
 También puedes ejecutarlos por separado:
 
@@ -90,25 +91,24 @@ Una vez iniciado, visita 👉 `http://localhost`
 
 ## 📡 Endpoints
 
-### 🌐 app\_public.py (puerto 80)
+### 🌐 app_public.py (puerto 80)
 
 | Ruta               | Descripción                                                     |
-|  |  |
+|--------------------|-----------------------------------------------------------------|
 | `/`                | Portada informativa estilo fintech                              |
 | `/register`        | Registro con validación de DNI y PDF                            |
 | `/login`           | Login con DNI y contraseña                                      |
 | `/dashboard`       | Vista de cuenta + formulario de transferencia                   |
 | `/verify_external` | **Vulnerable SSRF**: realiza `requests.get(url)` sin validación |
 
-### 🔒 app\_internal.py (puerto 443)
+### 🔒 app_internal.py (puerto 443)
 
 | Ruta            | Descripción                                                     |
-|  |  |
+|-----------------|-----------------------------------------------------------------|
 | `/users`        | Muestra todos los usuarios y sus IBAN                           |
 | `/founds`       | Devuelve saldos por usuario                                     |
 | `/transfer`     | Transferencia entre IBANs vía GET                               |
 | `/transfer_all` | Vuelca fondos de todos al IBAN especificado (solo para pruebas) |
-
 
 
 ## 🛡️ Mitigación
