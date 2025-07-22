@@ -106,7 +106,7 @@ Una vez iniciado, visita 👉 `http://localhost`
 | Ruta            | Descripción                                                     |
 |-----------------|-----------------------------------------------------------------|
 | `/users`        | Muestra todos los usuarios y sus IBAN                           |
-| `/founds`       | Devuelve saldos por usuario                                     |
+| `/funds`       | Devuelve saldos por usuario                                     |
 | `/transfer`     | Transferencia entre IBANs vía GET                               |
 | `/transfer_all` | Vuelca fondos de todos al IBAN especificado (solo para pruebas) |
 

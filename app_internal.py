@@ -21,8 +21,8 @@ def list_users():
     return jsonify({'users': data})
 
 
-@app.route('/founds')
-def get_founds():
+@app.route('/funds')
+def get_funds():
     """Return balances and IBANs for all users."""
     conn = get_db()
     c = conn.execute('SELECT iban, balance FROM users')
